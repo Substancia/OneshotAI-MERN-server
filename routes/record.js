@@ -27,7 +27,8 @@ recordRoutes.post('/', (req, res) => {
   const query = req.body.query || {};
   const options = { projection: { _id: 1, name: 1, state: 1 } };
   const college = req.body.college || null;
-  if(college == null) {
+  const student = req.body.student || null;
+  if(college == null && student == null) {
     dbo.getDB().collection('colleges').find(query, options).toArray((err, result) => {
       if(err) throw err;
       res.json(result);
@@ -46,7 +47,10 @@ recordRoutes.post('/', (req, res) => {
 
 recordRoutes.post('/details', (req, res) => {
   const query = req.body.query;
-  dbo.getDB().collection('colleges').findOne(query).toArray((err, result) => {
+  var collection = '';
+  if(req.body.collection === 'college') collection = 'colleges';
+  else if(req.body.collection === 'student') collection = 'students';
+  dbo.getDB().collection(collection).findOne(query, (err, result) => {
     if(err) throw err;
     res.json(result);
   });
@@ -56,6 +60,25 @@ recordRoutes.post('/catByCourses', (req, res) => {
   dbo.getDB().collection('catByCourses').findOne({}, { projection: { _id: 0 } }, (err, result) => {
     if(err) throw err;
     res.json(result);
+  });
+});
+
+recordRoutes.post('/getSimilarColleges', (req, res) => {
+  var selectedCollege = {};
+  dbo.getDB().collection('colleges').findOne({ name: req.body.college.name }, (err, result) => {
+    if(err) throw err;
+    selectedCollege = result;
+    dbo.getDB().collection('colleges').find({ state: selectedCollege.state }).toArray((err, result2) => {
+      if(err) throw err;
+      var similar = [];
+      result2.map(college => {
+        if(Math.abs(college.students - selectedCollege.students) <= 100)
+          if(selectedCollege.courses.some(course => college.courses.includes(course)))
+            if(college.name !== req.body.college.name)
+              similar.push(college);
+      });
+      res.json({ similar: similar });
+    });
   });
 });
 
