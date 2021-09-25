@@ -51,24 +51,42 @@ for(i = 0; i < 100*colleges.length; ++i) {
 const express = require('express');
 const Reset = express.Router();
 const dbo = require('./conn');
+const { addToCourseCategory } = require('../routes/record');
 
 Reset.get('/', (req, res) => {
-  dbo.getDB().collection('colleges').drop((err, result) => {
-    if(err) throw err;
-    console.log('Dropped collection "colleges"!');
+  dbo.getDB().listCollections({name: 'colleges'}).next(async (err, collinfo) => {
+    if(collinfo)
+    await dbo.getDB().collection('colleges').drop(err => {
+      if(err) throw err;
+      console.log('Dropped collection "colleges"!');
+    });
+    dbo.getDB().collection('colleges').insertMany(colleges, (err, result) => {
+      if(err) throw err;
+      console.log(result.insertedCount + ' documents inserted into collection "colleges"!');
+    });
   });
-  dbo.getDB().collection('students').drop((err, result) => {
-    if(err) throw err;
-    console.log('Dropped collection "students"!');
+
+  dbo.getDB().listCollections({name: 'students'}).next(async (err, collinfo) => {
+    if(collinfo)
+    await dbo.getDB().collection('students').drop(err => {
+      if(err) throw err;
+      console.log('Dropped collection "students"!');
+    });
+    dbo.getDB().collection('students').insertMany(students, (err, result) => {
+      if(err) throw err;
+      console.log(result.insertedCount + ' documents inserted into collection "students"!');
+    });
   });
-  dbo.getDB().collection('colleges').insertMany(colleges, (err, result) => {
-    if(err) throw err;
-    console.log(result.insertedCount + ' documents inserted into collection "colleges"!');
+
+  dbo.getDB().listCollections({name: 'catByCourses'}).next(async (err, collinfo) => {
+    if(collinfo)
+    await dbo.getDB().collection('catByCourses').drop(err => {
+      if(err) throw err;
+      console.log('Dropped collection "catByCourses"!');
+    });
+    addToCourseCategory(colleges);
   });
-  dbo.getDB().collection('students').insertMany(students, (err, result) => {
-    if(err) throw err;
-    console.log(result.insertedCount + ' documents inserted into collection "students"!');
-  });
+  
   res.json({ status: 'Success', colleges: 100, students: 100*100 });
 });
 
