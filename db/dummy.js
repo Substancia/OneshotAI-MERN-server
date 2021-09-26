@@ -1,5 +1,8 @@
-// To populate with dummy data
+/*
+Misc. module: To populate with randomized dummy data.
+*/
 
+// set of locations (colleges) to randmoize from
 var locations = [
   {
     country: 'India',
@@ -19,9 +22,12 @@ var locations = [
     ],
   },
 ];
+// set of courses (colleges) to randomize from
 var courses = ['Computer Science', 'Electronics', 'IT', 'Science', 'Arts', 'Mechanics'];
+// set of skills (students) to randomize from
 var skills = ['C++', 'Java', 'C', 'Python', 'Javascript', 'R', 'Mathematica', 'Matlab', 'Ruby', 'Lisp'];
 
+// creating a list of 100 colleges with randomized data
 var colleges = [];
 for(var i = 0; i < 100; ++i) {
   var state = locations[0]['states'][Math.floor(3 * Math.random())];
@@ -36,6 +42,7 @@ for(var i = 0; i < 100; ++i) {
   });
 }
 
+// creating a list of 10000 students (100 per college) with randomized data
 var students = [];
 for(i = 0; i < 100*colleges.length; ++i) {
   var college = 'College' + ('0' + Math.floor(i / 100)).slice(-2);
@@ -53,7 +60,9 @@ const Reset = express.Router();
 const dbo = require('./conn');
 const { addToCourseCategory } = require('../routes/record');
 
+// setting API endpoint to reset data in DB
 Reset.get('/', (req, res) => {
+  // dropping and writing 'colleges' collection
   dbo.getDB().listCollections({name: 'colleges'}).next(async (err, collinfo) => {
     if(collinfo)
     await dbo.getDB().collection('colleges').drop(err => {
@@ -66,6 +75,7 @@ Reset.get('/', (req, res) => {
     });
   });
 
+  // dropping and writing 'students' collection
   dbo.getDB().listCollections({name: 'students'}).next(async (err, collinfo) => {
     if(collinfo)
     await dbo.getDB().collection('students').drop(err => {
@@ -78,6 +88,7 @@ Reset.get('/', (req, res) => {
     });
   });
 
+  // dropping and writing collection with data on college categories by courses offered
   dbo.getDB().listCollections({name: 'catByCourses'}).next(async (err, collinfo) => {
     if(collinfo)
     await dbo.getDB().collection('catByCourses').drop(err => {

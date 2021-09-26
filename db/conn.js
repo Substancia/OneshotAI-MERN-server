@@ -1,3 +1,7 @@
+/*
+Module for connecting to MongoDB and returning database object.
+*/
+
 const { MongoClient } = require('mongodb');
 const URL = 'mongodb+srv://sentienta:mongoSentienta7@cluster0.jih6w.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const dbname = 'OneshotAI';
