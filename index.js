@@ -14,9 +14,6 @@ App.use(cors());
 const dbo = require('./db/conn');   // importing for DB connection
 const PORT = process.env.PORT || 8080;
 
-// TEMPORARY: REMOVE
-App.get('/', (req, res) => { res.send('Backend online!'); console.log('Online!') });
-
 // setting routes
 App.use('/record', recordRoutes);
 App.use('/resetData', require('./db/dummy'));   // misc: to reset DB collections during testing
