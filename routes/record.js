@@ -111,5 +111,9 @@ recordRoutes.post('/getSimilarColleges', (req, res) => {
   });
 });
 
+recordRoutes.post('/getNumberOfColleges', async (req, res) =>
+  res.json({ count: await dbo.getDB().collection('colleges').count() })
+);
+
 // exporting Router
 module.exports = { recordRoutes, addToCourseCategory };
