@@ -19,7 +19,7 @@ App.use('/record', recordRoutes);
 App.use('/resetData', require('./db/dummy'));   // misc: to reset DB collections during testing
 
 // TEMPORARY: REMOVE
-App.get('/', (req, res) => res.send('Backend online!'));
+App.get('/', (req, res) => { res.send('Backend online!'); console.log('Online!') });
 
 // App serving
 App.listen(PORT, () => {
