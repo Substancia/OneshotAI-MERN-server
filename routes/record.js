@@ -1,5 +1,6 @@
 // setting Express Router app and db connection
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const recordRoutes = express.Router();
 const dbo = require('../db/conn');
 
@@ -22,13 +23,41 @@ const addToCourseCategory = colleges => {
   });
 }
 
+const searchCollege = async (query, options, res) => {
+  var searchFields = 2;
+  while(searchFields > 0) {
+    await new Promise((resolve, reject) => {
+      dbo.getDB().collection('colleges').find(query, options).toArray((err, result) => {
+        if(err) throw err;
+        if(result.length > 0) {
+          res.json(result);
+          console.log('Searched college served!');
+          return;
+        }
+        if(Buffer.isBuffer(query.name) || /^[0-9A-F]{24}$/i.test(query.name)) {
+          query = { ...query, _id: ObjectId(query.name) };
+          delete query.name;
+          resolve();
+        } else {
+          res.json([]);
+          return;
+        }
+      });
+    }).then(searchFields -= 1);
+  }
+  res.json([]);
+}
+
 // setting routes (prefix '/record')
 recordRoutes.post('/', (req, res) => {
-  const query = req.body.query || {};
+  var query = req.body.query || {};
   const options = { projection: { _id: 1, name: 1, state: 1 } };
   const college = req.body.college || null;
   const student = req.body.student || null;
-  if(college == null && student == null) {
+  if('type' in req.body && req.body.type === 'searchKey') {
+    searchCollege(query, options, res);
+  }
+  else if(college == null && student == null) {
     dbo.getDB().collection('colleges').find(query, options).toArray((err, result) => {
       if(err) throw err;
       res.json(result);
