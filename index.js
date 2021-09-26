@@ -12,7 +12,7 @@ const App = express();
 App.use(express.json());
 App.use(cors());
 const dbo = require('./db/conn');   // importing for DB connection
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // TEMPORARY: REMOVE
 App.get('/', (req, res) => { res.send('Backend online!'); console.log('Online!') });
