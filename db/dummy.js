@@ -105,8 +105,8 @@ Reset.get('/', (req, res) => {
     await dbo.getDB().collection('catByCourses').drop(err => {
       if(err) throw err;
       console.log('Dropped collection "catByCourses"!');
+      addToCourseCategory(colleges);
     });
-    addToCourseCategory(colleges);
   });
   
   res.json({ status: 'Success', colleges: 100, students: 100*100 });
