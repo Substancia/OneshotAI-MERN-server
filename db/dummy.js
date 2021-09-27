@@ -29,7 +29,7 @@ var skills = ['C++', 'Java', 'C', 'Python', 'Javascript', 'R', 'Mathematica', 'M
 
 // creating a list of 100 colleges with randomized data
 var colleges = [];
-for(var i = 0; i < 100; ++i) {
+for(var i = 0; i < 99; ++i) {
   var state = locations[0]['states'][Math.floor(3 * Math.random())];
   colleges.push({
     name: 'College' + ('0' + i).slice(-2),
@@ -44,7 +44,7 @@ for(var i = 0; i < 100; ++i) {
 
 // adding a single college from a new state
 colleges.push({
-  name: 'College100',
+  name: 'College99',
   year: Math.floor(Math.random() * 60 + 1950),
   city: 'Pune',
   state: 'Maharashtra',
