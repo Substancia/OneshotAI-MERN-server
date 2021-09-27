@@ -43,7 +43,7 @@ for(var i = 0; i < 100; ++i) {
 }
 
 // adding a single college from a new state
-college.push({
+colleges.push({
   name: 'College100',
   year: Math.floor(Math.random() * 60 + 1950),
   city: 'Pune',
