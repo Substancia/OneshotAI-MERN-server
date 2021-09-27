@@ -42,6 +42,17 @@ for(var i = 0; i < 100; ++i) {
   });
 }
 
+// adding a single college from a new state
+college.push({
+  name: 'College100',
+  year: Math.floor(Math.random() * 60 + 1950),
+  city: 'Pune',
+  state: 'Maharashtra',
+  country: 'India',
+  students: 100,
+  courses: courses.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * courses.length)),
+});
+
 // creating a list of 10000 students (100 per college) with randomized data
 var students = [];
 for(i = 0; i < 100*colleges.length; ++i) {
